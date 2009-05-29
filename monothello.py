@@ -16,8 +16,20 @@ class Application:
         menu.add_cascade(label="Help", menu=help_menu)
         game_menu.add_command(label="Quit", command=self.bye)
         help_menu.add_command(label="About", command=self.show_credits)
-
         window.config(menu=menu)
+
+        back = Frame(window)
+        back.pack()
+
+        for row in range(8):
+            frame = Frame(back)
+            frame.pack()
+            for column in range(8):
+                button = Button(frame)
+                button["width"] = button["height"] = 3
+                button["bg"] = "brown"
+                button.pack(side=LEFT)
+        
         window.mainloop()
   
     def show_credits(self):
