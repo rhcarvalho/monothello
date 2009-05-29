@@ -8,6 +8,8 @@ class Application:
 
         window = Tk()
         window.title("MonOthello")
+        window.wm_maxsize(width="400", height="400")
+        window.wm_minsize(width="400", height="400")
 
         menu = Menu(window)
         game_menu = Menu(menu, tearoff=0)
@@ -19,16 +21,15 @@ class Application:
         window.config(menu=menu)
 
         back = Frame(window)
-        back.pack()
+        back.pack(fill=BOTH, expand=1)
 
         for row in range(8):
             frame = Frame(back)
-            frame.pack()
+            frame.pack(fill=BOTH, expand=1)
             for column in range(8):
                 button = Button(frame)
-                button["width"] = button["height"] = 3
                 button["bg"] = "brown"
-                button.pack(side=LEFT)
+                button.pack(side=LEFT, fill=BOTH, expand=1)
         
         window.mainloop()
   
