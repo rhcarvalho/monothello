@@ -4,6 +4,9 @@ from engine import Engine
 
 
 class Application:
+    """Handles the GUI stuffs of the game. It communicates with the Engine of 
+    the game."""
+
     def __init__(self):
         
         self.game = False
@@ -12,6 +15,21 @@ class Application:
         window.wm_maxsize(width="400", height="400")
         window.wm_minsize(width="400", height="400")
 
+        self.create_elements(window)        
+
+        window.mainloop()
+
+    def create_elements(self, window):
+        create_menu(window)
+        self.board = dict()        
+        self.create_board(window, self.board)
+        pass_turn = Button(window, text="Pass", command=self.pass_turn)
+        pass_turn.pack()
+        self.status = Label(window)
+        self.status["text"] = "Welcome to MonOthello!"
+        self.status.pack(side=LEFT)
+
+    def create_menu(self, window):
         menu = Menu(window)
 
         game_menu = Menu(menu, tearoff=0)
@@ -25,13 +43,13 @@ class Application:
         game_menu.add_command(label="New", command=self.create_game)
         game_menu.add_command(label="Quit", command=self.bye)
         help_menu.add_command(label="About", command=self.show_credits)
-
+        
         window.config(menu=menu)
 
+    def create_board(self, window, board):
         back = Frame(window)
         back.pack(fill=BOTH, expand=1)
 
-        self.board = dict()
         for row in range(8):
             frame = Frame(back)
             frame.pack(fill=BOTH, expand=1)
@@ -41,16 +59,9 @@ class Application:
                                 command=lambda row=row, column=column: self.message((row, column)))
                 button["bg"] = "gray"
                 button.pack(side=LEFT, fill=BOTH, expand=1)
-                self.board.update( {(row, column): button} )
-        give_up = Button(window, text="Pass", command=self.give_up)
-        give_up.pack()
-        self.status = Label(window)
-        self.status["text"] = "Welcome to MonOthello!"
-        self.status.pack(side=LEFT)
+                board.update( {(row, column): button} )
 
-        window.mainloop()
-
-    def give_up(self):
+    def pass_turn(self):
         if self.game.turn == "B":
             self.game.turn = "W"
             self.status["text"] = "W's turn."
