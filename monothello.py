@@ -1,4 +1,3 @@
-import sys
 from Tkinter import *
 import tkMessageBox
 
@@ -118,172 +117,42 @@ class Engine:
 
         valid = 0
 
-        i = row
-        count = 0
-        #up vertical
-        while i >= 1:
-            i -= 1
-            if self.board[(i, column)] == self.turn and count == 0:
-                break
-            elif self.board[(i, column)] == "E":
-                break
-            elif self.turn == self.board[(i, column)] and count != 0:
-                for i in range(i+1, row+1):
-                    change.append((i, column))
-                valid += 1
-                break
-            elif self.turn != self.board[(i, column)]:
-                count += 1
+        directions = [(1, 0), (0, 1), (-1, 0), (0, -1), 
+                      (1, 1), (-1, -1), (1, -1), (-1, 1)]
 
-        i = row
-        count = 0
+        for direction in directions:            
+            i = row
+            j = column
+            count = 0
+                
+            while True:
+                if direction[0] == 1 and i > 6:
+                    break
+                if direction[0] == -1 and i < 1:
+                    break
+                if direction[1] == 1 and j > 6:
+                    break
+                if direction[1] == -1 and j < 1:
+                    break
+                
+                i += direction[0]
+                j += direction[1]
 
-        #down vertical
-        while i <= 6:
-            i += 1
-            if self.board[(i, column)] == self.turn and count == 0:
-                break
-            elif self.board[(i, column)] == "E":
-                break
-            elif self.turn == self.board[(i, column)] and count != 0:
-                for i in range(row, i+1):
-                    change.append((i, column))
-                valid += 1
-                break
-            elif self.turn != self.board[(i, column)]:
-                count += 1
-
-        j = column
-        count = 0
-        
-        #left horizontal
-        while j >= 1:
-            j -= 1
-            if self.board[(row, j)] == self.turn and count == 0:
-                break
-            elif self.board[(row, j)] == "E":
-                break
-            elif self.turn == self.board[(row, j)] and count != 0:
-                for j in range(j, column+1):
-                    change.append((row, j))
-                valid += 1
-                break
-            elif self.turn != self.board[(row, j)]:
-                count += 1
-
-        j = column
-        count = 0
-        
-        #right horizontal
-        while j <= 6:
-            j += 1
-            if self.board[(row, j)] == self.turn and count == 0:
-                break
-            elif self.board[(row, j)] == "E":
-                break
-            elif self.turn == self.board[(row, j)] and count != 0:
-                for j in range(column, j+1):
-                    change.append((row, j))
-                valid += 1
-                break
-            elif self.turn != self.board[(row, j)]:
-                count += 1
-
-        i = row
-        j = column
-        count = 0
-
-        #northeast
-        while j <= 6 and i >= 1:
-            i -= 1
-            j += 1
-            if self.board[(i, j)] == self.turn and count == 0:
-                break
-            elif self.board[(i, j)] == "E":
-                break
-            elif self.turn == self.board[(i, j)] and count != 0:
-                x = row
-                y = column
-                for times in range(count+1):
-                    change.append((x, y))
-                    x -= 1
-                    y += 1
-                valid += 1
-                break
-            elif self.turn != self.board[(i, j)]:
-                count += 1
-            
-        i = row
-        j = column
-        count = 0
-
-        #southwest
-        while j >= 1 and i <= 6:
-            i += 1
-            j -= 1
-            if self.board[(i, j)] == self.turn and count == 0:
-                break
-            elif self.board[(i, j)] == "E":
-                break
-            elif self.turn == self.board[(i, j)] and count != 0:
-                x = row
-                y = column
-                for times in range(count+1):
-                    change.append((x, y))
-                    x += 1
-                    y -= 1
-                valid += 1
-                break
-            elif self.turn != self.board[(i, j)]:
-                count += 1
-
-        i = row
-        j = column
-        count = 0
-
-        #northwest
-        while j >= 1 and i >= 1:
-            i -= 1
-            j -= 1
-            if self.board[(i, j)] == self.turn and count == 0:
-                break
-            elif self.board[(i, j)] == "E":
-                break
-            elif self.turn == self.board[(i, j)] and count != 0:
-                x = row
-                y = column
-                for times in range(count+1):
-                    change.append((x, y))
-                    x -= 1
-                    y -= 1
-                valid += 1
-                break
-            elif self.turn != self.board[(i, j)]:
-                count += 1
-
-        i = row
-        j = column
-        count = 0
-
-        #southeast
-        while j <= 6 and i <= 6:
-            i += 1
-            j += 1
-            if self.board[(i, j)] == self.turn and count == 0:
-                break
-            elif self.board[(i, j)] == "E":
-                break
-            elif self.turn == self.board[(i, j)] and count != 0:
-                x = row
-                y = column
-                for times in range(count+1):
-                    change.append((x, y))
-                    x += 1
-                    y += 1
-                valid += 1
-                break
-            elif self.turn != self.board[(i, j)]:
-                count += 1    
+                if self.board[(i, j)] == self.turn and count == 0:
+                    break
+                elif self.board[(i, j)] == "E":
+                    break
+                elif self.turn == self.board[(i, j)] and count != 0:
+                    x = row
+                    y = column
+                    for times in range(count+1):
+                        change.append((x, y))
+                        x += direction[0]
+                        y += direction[1]
+                    valid += 1
+                    break
+                elif self.turn != self.board[(i, j)]:
+                    count += 1    
 
         if valid:
             for item in change:
