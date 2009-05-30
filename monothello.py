@@ -78,8 +78,8 @@ class Application:
         self.game.change_turn()
         self.status["text"] = "%s's turn." % self.game.turn        
 
-    def play(self, position):
-        if not self.game.move(position):
+    def play(self, position, play):
+        if not self.game.move(position, play):
             self.status["text"] = "Wrong move. %s's turn" % self.game.turn
         else:
             self.update_board()
