@@ -30,11 +30,15 @@ class Application:
         help_menu = Menu(menu, tearoff=0)
 
         menu.add_cascade(label="Game", menu=game_menu)
-        menu.add_cascade(label="Settings", menu=settings_menu)
-        menu.add_cascade(label="Help", menu=help_menu)
-
         game_menu.add_command(label="New", command=self.create_game)
         game_menu.add_command(label="Quit", command=self.bye)
+
+        menu.add_cascade(label="Settings", menu=settings_menu)
+        self.playable_positions = False
+        settings_menu.add_checkbutton(label="Show playable positions", 
+                                      variable=self.playable_positions, command=self.toggle_playable_positions)
+
+        menu.add_cascade(label="Help", menu=help_menu)
         help_menu.add_command(label="About", command=self.show_credits)
         
         self.window.config(menu=menu)
@@ -74,16 +78,20 @@ class Application:
             print "Error."
             quit()
 
+    def toggle_playable_positions(self):
+        self.playable_positions = not self.playable_positions            
+        self.update_board()       
+
     def pass_turn(self):
         self.game.change_turn()
-        self.status["text"] = "%s's turn." % self.game.turn        
+        self.status["text"] = "%s's turn." % self.game.turn
 
     def play(self, position, play):
         if not self.game.move(position, play):
             self.status["text"] = "Wrong move. %s's turn" % self.game.turn
         else:
             self.update_board()
-            self.status["text"] = "%s's turn" % self.game.turn
+            self.status["text"] = "%s's turn" % self.game.turn      
 
     def update_board(self):
         for row in range(8):
@@ -98,6 +106,12 @@ class Application:
                     position["state"] = DISABLED
                 else:
                     position["bg"] = "brown"
+
+        if self.playable_positions:
+            valid = self.game.find_valid_positions()
+            for position in valid:
+                button = self.board[position]
+                button["bg"] = "green"
 
     def show_credits(self):
         message = "MonOthello\nv.: 1.0"

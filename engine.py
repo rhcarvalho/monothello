@@ -72,10 +72,17 @@ class Engine:
                 for item in change:
                     self.board[item] = self.turn
 
-                if self.turn == "B":
-                    self.turn = "W"
-                else:
-                    self.turn = "B"
+                self.change_turn()
             return True
         else:
             return False
+
+    def find_valid_positions(self):
+        """Return a list of valid positions."""
+
+        valid_positions = list()
+        for i in range(8):
+            for j in range(8):
+                if self.board[(i, j)] == "E" and self.move((i, j), False):
+                    valid_positions.append((i, j))
+        return valid_positions
