@@ -75,12 +75,9 @@ class Application:
             quit()
 
     def pass_turn(self):
-        if self.game.turn == "B":
-            self.game.turn = "W"
-            self.status["text"] = "W's turn."
-        else:
-            self.game.turn = "B"
-            self.status["text"] = "B's turn."
+        self.game.change_turn()
+        self.status["text"] = "%s's turn." % self.game.turn
+        
 
     def play(self, position):
         if not self.game.move(position):

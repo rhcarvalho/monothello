@@ -11,6 +11,12 @@ class Engine:
     
         self.turn = turn
 
+    def change_turn(self):
+        if self.game.turn == "B":
+            self.game.turn = "W"
+        else:
+            self.game.turn = "B"       
+
     def move(self, position):
         row = position[0]
         column = position[1]
