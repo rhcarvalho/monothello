@@ -89,6 +89,7 @@ class Application:
 
     def pass_turn(self):
         self.game.change_turn()
+        self.update_board()
         self.status["text"] = "%s's turn." % self.game.turn
 
     def play(self, position, play):
