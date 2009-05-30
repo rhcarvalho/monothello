@@ -50,7 +50,7 @@ class Application:
             for column in range(8):
                 button = Button(frame,
                                 state=DISABLED,
-                                command=lambda position=(row, column): self.play(position))
+                                command=lambda position=(row, column): self.play(position, True))
                 button["bg"] = "gray"
                 button.pack(side=LEFT, fill=BOTH, expand=1)
                 self.board.update( {(row, column): button} )
@@ -76,8 +76,7 @@ class Application:
 
     def pass_turn(self):
         self.game.change_turn()
-        self.status["text"] = "%s's turn." % self.game.turn
-        
+        self.status["text"] = "%s's turn." % self.game.turn        
 
     def play(self, position):
         if not self.game.move(position):

@@ -17,7 +17,11 @@ class Engine:
         else:
             self.turn = "B"       
 
-    def move(self, position):
+    def move(self, position, play):
+        """If play is True, move to that position. 
+        If play is False, just check if the position is valid.
+        """
+
         row = position[0]
         column = position[1]
         change = list()
@@ -50,6 +54,8 @@ class Engine:
                 elif self.board[(i, j)] == "E":
                     break
                 elif self.turn == self.board[(i, j)] and count != 0:
+                    if not play:
+                        return True
                     x = row
                     y = column
                     for times in range(count+1):
@@ -62,11 +68,14 @@ class Engine:
                     count += 1    
 
         if valid:
-            for item in change:
-                self.board[item] = self.turn
+            if play:
+                for item in change:
+                    self.board[item] = self.turn
 
-            if self.turn == "B":
-                self.turn = "W"
-            else:
-                self.turn = "B"
+                if self.turn == "B":
+                    self.turn = "W"
+                else:
+                    self.turn = "B"
             return True
+        else:
+            return False
