@@ -97,7 +97,19 @@ class Application:
         else:
             self.game.calculate_score()
             self.update_board()
-            self.status["text"] = "%s's turn" % self.game.turn      
+            if self.game.check_end():
+                message = "End of game. "
+                if self.game.black_score > self.game.white_score:
+                    winner = "Black win!"
+                elif self.game.black_score == self.game.white_score:
+                    winner = "Tie."
+                else:
+                    winner = "White win!"
+                message += winner
+                tkMessageBox.showinfo(title="End of game", message=message)
+                self.game = False
+            else:
+                self.status["text"] = "%s's turn" % self.game.turn      
 
     def update_board(self):
         for row in range(8):

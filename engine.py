@@ -16,7 +16,7 @@ class Engine:
         if self.turn == "B":
             self.turn = "W"
         else:
-            self.turn = "B"       
+            self.turn = "B"
 
     def move(self, position, play):
         """If play is True, move to that position. 
@@ -96,3 +96,14 @@ class Engine:
                     self.white_score += 1
                 if self.board[(i, j)] == "B":
                     self.black_score += 1
+
+    def check_end(self):
+        this_turn = self.find_valid_positions()
+        self.change_turn()
+        next_turn = self.find_valid_positions()
+        if len(this_turn) == len(next_turn) == 0:
+            self.change_turn()
+            return True
+        else:
+            self.change_turn()
+            return False
