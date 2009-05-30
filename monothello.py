@@ -4,33 +4,26 @@ from engine import Engine
 
 
 class Application:
-    """Handles the GUI stuffs of the game. It communicates with the Engine of 
-    the game."""
+    """Handles the GUI stuffs. It communicates with the Engine of the game."""
 
-    def __init__(self):
-        
+    def __init__(self):       
+        self.window = Tk()
+        self.window.title("MonOthello")
+        self.window.wm_maxsize(width="400", height="400")
+        self.window.wm_minsize(width="400", height="400")
+
+        self.create_elements()
         self.game = False
-        window = Tk()
-        window.title("MonOthello")
-        window.wm_maxsize(width="400", height="400")
-        window.wm_minsize(width="400", height="400")
 
-        self.create_elements(window)        
+        self.window.mainloop()
 
-        window.mainloop()
+    def create_elements(self):
+        self.create_menu()
+        self.create_board()
+        self.create_options()
 
-    def create_elements(self, window):
-        create_menu(window)
-        self.board = dict()        
-        self.create_board(window, self.board)
-        pass_turn = Button(window, text="Pass", command=self.pass_turn)
-        pass_turn.pack()
-        self.status = Label(window)
-        self.status["text"] = "Welcome to MonOthello!"
-        self.status.pack(side=LEFT)
-
-    def create_menu(self, window):
-        menu = Menu(window)
+    def create_menu(self):
+        menu = Menu(self.window)
 
         game_menu = Menu(menu, tearoff=0)
         settings_menu = Menu(menu, tearoff=0)
@@ -44,10 +37,11 @@ class Application:
         game_menu.add_command(label="Quit", command=self.bye)
         help_menu.add_command(label="About", command=self.show_credits)
         
-        window.config(menu=menu)
+        self.window.config(menu=menu)
 
-    def create_board(self, window, board):
-        back = Frame(window)
+    def create_board(self):
+        self.board = dict()
+        back = Frame(self.window)
         back.pack(fill=BOTH, expand=1)
 
         for row in range(8):
@@ -56,25 +50,17 @@ class Application:
             for column in range(8):
                 button = Button(frame,
                                 state=DISABLED,
-                                command=lambda row=row, column=column: self.message((row, column)))
+                                command=lambda position=(row, column): self.play(position))
                 button["bg"] = "gray"
                 button.pack(side=LEFT, fill=BOTH, expand=1)
-                board.update( {(row, column): button} )
+                self.board.update( {(row, column): button} )
 
-    def pass_turn(self):
-        if self.game.turn == "B":
-            self.game.turn = "W"
-            self.status["text"] = "W's turn."
-        else:
-            self.game.turn = "B"
-            self.status["text"] = "B's turn."
-
-    def message(self, position):
-        if not self.game.play(position):
-            self.status["text"] = "Wrong move. %s's turn" % self.game.turn
-        else:
-            self.update_board()
-            self.status["text"] = "%s's turn" % self.game.turn
+    def create_options(self):
+        pass_turn = Button(self.window, text="Pass", command=self.pass_turn)
+        pass_turn.pack(side=RIGHT)
+        self.status = Label(self.window)
+        self.status["text"] = "Welcome to MonOthello!"
+        self.status.pack(side=LEFT)        
 
     def create_game(self):
         if self.game:
@@ -87,6 +73,21 @@ class Application:
         except:
             print "Error."
             quit()
+
+    def pass_turn(self):
+        if self.game.turn == "B":
+            self.game.turn = "W"
+            self.status["text"] = "W's turn."
+        else:
+            self.game.turn = "B"
+            self.status["text"] = "B's turn."
+
+    def play(self, position):
+        if not self.game.move(position):
+            self.status["text"] = "Wrong move. %s's turn" % self.game.turn
+        else:
+            self.update_board()
+            self.status["text"] = "%s's turn" % self.game.turn
 
     def update_board(self):
         for row in range(8):

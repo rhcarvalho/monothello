@@ -1,5 +1,7 @@
 class Engine:
     def __init__(self, turn="B"):
+        """Put the pieces on the board and set the turn."""
+
         self.board = dict()
         for row in range(8):
             for column in range(8):
@@ -9,7 +11,7 @@ class Engine:
     
         self.turn = turn
 
-    def play(self, position):
+    def move(self, position):
         row = position[0]
         column = position[1]
         change = list()
