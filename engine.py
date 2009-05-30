@@ -9,6 +9,7 @@ class Engine:
         self.board[(3, 3)] = self.board[(4, 4)] = "B"
         self.board[(3, 4)] = self.board[(4, 3)] = "W"
     
+        self.black_score = self.white_score = 2
         self.turn = turn
 
     def change_turn(self):
@@ -86,3 +87,12 @@ class Engine:
                 if self.board[(i, j)] == "E" and self.move((i, j), False):
                     valid_positions.append((i, j))
         return valid_positions
+
+    def calculate_score(self):
+        self.black_score = self.white_score = 0
+        for i in range(8):
+            for j in range(8):
+                if self.board[(i, j)] == "W":
+                    self.white_score += 1
+                if self.board[(i, j)] == "B":
+                    self.black_score += 1

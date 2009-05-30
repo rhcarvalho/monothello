@@ -25,26 +25,29 @@ class Application:
     def create_menu(self):
         menu = Menu(self.window)
 
-        game_menu = Menu(menu, tearoff=0)
-        settings_menu = Menu(menu, tearoff=0)
-        help_menu = Menu(menu, tearoff=0)
+        game = Menu(menu, tearoff=0)
+        game.add_command(label="New", command=self.create_game, underline=0)
+        game.add_command(label="Quit", command=self.bye, underline=0)
+        menu.add_cascade(label="Game", menu=game, underline=0)
 
-        menu.add_cascade(label="Game", menu=game_menu)
-        game_menu.add_command(label="New", command=self.create_game)
-        game_menu.add_command(label="Quit", command=self.bye)
-
-        menu.add_cascade(label="Settings", menu=settings_menu)
+        settings = Menu(menu, tearoff=0)
         self.playable_positions = False
-        settings_menu.add_checkbutton(label="Show playable positions", 
-                                      variable=self.playable_positions, 
-                                      command=self.toggle_playable_positions)
+        settings.add_checkbutton(label="Show playable positions", 
+                                 variable=self.playable_positions, 
+                                 command=self.toggle_playable_positions,
+                                 underline=0)
+        menu.add_cascade(label="Settings", menu=settings, underline=0)
 
-        menu.add_cascade(label="Help", menu=help_menu)
-        help_menu.add_command(label="About", command=self.show_credits)
+
+        help = Menu(menu, tearoff=0)
+        help.add_command(label="About", command=self.show_credits, underline=0)
+        menu.add_cascade(label="Help", menu=help, underline=0)
         
         self.window.config(menu=menu)
 
     def create_board(self):
+        self.score = Label(self.window)
+        self.score.pack()
         self.board = dict()
         back = Frame(self.window)
         back.pack(fill=BOTH, expand=1)
@@ -62,10 +65,10 @@ class Application:
 
     def create_options(self):
         pass_turn = Button(self.window, text="Pass", command=self.pass_turn)
-        pass_turn.pack(side=RIGHT)
+        pass_turn.pack()
         self.status = Label(self.window)
         self.status["text"] = "Welcome to MonOthello!"
-        self.status.pack(side=LEFT)        
+        self.status.pack(side=LEFT)
 
     def create_game(self):
         if self.game:
@@ -92,6 +95,7 @@ class Application:
         if not self.game.move(position, play):
             self.status["text"] = "Wrong move. %s's turn" % self.game.turn
         else:
+            self.game.calculate_score()
             self.update_board()
             self.status["text"] = "%s's turn" % self.game.turn      
 
@@ -114,6 +118,8 @@ class Application:
             for position in valid:
                 button = self.board[position]
                 button["bg"] = "green"
+
+        self.score["text"] = "Black: %s | White: %s" % (self.game.black_score, self.game.white_score)
 
     def show_credits(self):
         message = "MonOthello\nv.: 1.0"
