@@ -1,4 +1,5 @@
-from Tkinter import *
+from Tkinter import Tk, Menu, Label, Frame, Button
+from Tkinter import BOTH, LEFT, RIGHT, NORMAL, DISABLED
 import tkMessageBox
 from engine import Engine, EmptyPiece, Player1Piece, Player2Piece
 
@@ -10,14 +11,15 @@ class Application:
     def __init__(self):
         """Initialize the window and the GUI elements."""
 
+        self.game = False
+        self.show_valid_positions = False
+
         self.window = Tk()
         self.window.title("MonOthello")
         self.window.wm_maxsize(width="400", height="400")
         self.window.wm_minsize(width="400", height="400")
 
         self.create_elements()
-        self.game = False
-        self.show_valid_positions = False
 
         self.window.mainloop()
 
@@ -40,7 +42,6 @@ class Application:
                                  command=self.toggle_show_valid_positions,
                                  underline=0)
         menu.add_cascade(label="Settings", menu=settings, underline=0)
-
 
         help = Menu(menu, tearoff=0)
         help.add_command(label="About", command=self.show_credits, underline=0)
