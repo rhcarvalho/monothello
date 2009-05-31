@@ -66,7 +66,7 @@ class Application:
                                 command=lambda position=(row, column): self.play(position))
                 button["bg"] = "gray"
                 button.pack(side=LEFT, fill=BOTH, expand=1)
-                self.board.update( {(row, column): button} )
+                self.board.update({(row, column): button})
 
     def create_options(self):
         pass_turn = Button(self.window, text="Pass", command=self.pass_turn)
@@ -120,7 +120,7 @@ class Application:
             if self.game.check_end():
                 message = "End of game. "
                 if self.game.someone_winning():
-                    message += self.game.who_is_winning() + " win!"
+                    message += self.game.who_is_winning() + " won!"
                 else:
                     message += "Tie."
                 tkMessageBox.showinfo(title="End of game", message=message)
