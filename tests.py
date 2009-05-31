@@ -38,56 +38,64 @@ class TestMove(unittest.TestCase):
         self.game.turn = "B"
         self.game.board[(0, 0)] = "B"
         self.game.board[(0, 1)] = "W"
-        self.game.move((0, 2), True)
+        valid = self.game.move((0, 2), True)
+        self.assertEqual(valid, True)
         self.assertEqual(self.game.board[(0, 1)], "B")
     
     def test_move_east(self):
         self.game.turn = "B"
         self.game.board[(0, 2)] = "B"
         self.game.board[(0, 1)] = "W"
-        self.game.move((0, 0), True)
+        valid = self.game.move((0, 0), True)
+        self.assertEqual(valid, True)
         self.assertEqual(self.game.board[(0, 1)], "B")        
 
     def test_move_north(self):
         self.game.turn = "B"
         self.game.board[(3, 2)] = "B"
         self.game.board[(4, 2)] = "W"
-        self.game.move((5, 2), True)
+        valid = self.game.move((5, 2), True)
+        self.assertEqual(valid, True)
         self.assertEqual(self.game.board[(4, 2)], "B")
 
     def test_move_south(self):
         self.game.turn = "B"
         self.game.board[(5, 2)] = "B"
         self.game.board[(4, 2)] = "W"
-        self.game.move((3, 2), True)
+        valid = self.game.move((3, 2), True)
+        self.assertEqual(valid, True)
         self.assertEqual(self.game.board[(3, 2)], "B")
 
     def test_move_northeast(self):
         self.game.turn = "B"
         self.game.board[(3, 7)] = "B"
         self.game.board[(4, 6)] = "W"
-        self.game.move((5, 5), True)
+        valid = self.game.move((5, 5), True)
+        self.assertEqual(valid, True)
         self.assertEqual(self.game.board[(4, 6)], "B")        
 
     def test_move_southwest(self):
         self.game.turn = "B"
         self.game.board[(5, 5)] = "B"
         self.game.board[(4, 6)] = "W"
-        self.game.move((3, 7), True)
+        valid = self.game.move((3, 7), True)
+        self.assertEqual(valid, True)
         self.assertEqual(self.game.board[(4, 6)], "B")       
 
     def test_move_northwest(self):
         self.game.turn = "B"
         self.game.board[(3, 5)] = "B"
         self.game.board[(4, 6)] = "W"
-        self.game.move((5, 7), True)
+        valid = self.game.move((5, 7), True)
+        self.assertEqual(valid, True)
         self.assertEqual(self.game.board[(4, 6)], "B")        
 
     def test_move_southeast(self):
         self.game.turn = "B"
         self.game.board[(5, 7)] = "B"
         self.game.board[(4, 6)] = "W"
-        self.game.move((3, 5), True)
+        valid = self.game.move((3, 5), True)
+        self.assertEqual(valid, True)
         self.assertEqual(self.game.board[(4, 6)], "B")        
 
 
@@ -146,7 +154,7 @@ class TestEndGame(unittest.TestCase):
         self.game.board[(3, 3)] = self.game.board[(4, 4)] = "E"
         self.game.board[(3, 4)] = self.game.board[(4, 3)] = "E"
 
-    def test_no_valid_move(self):
+    def test_no_move(self):
         self.game.board[(0, 1)] = "W"
         self.game.board[(3, 5)] = "B"
         self.assertEqual(self.game.check_end(), True)
