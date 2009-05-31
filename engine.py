@@ -6,6 +6,12 @@ class Piece(object):
     color = None
     name = None
 
+    def __eq__(self, other):
+        return isinstance(self, other.__class__)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
 class EmptyPiece(Piece):
     color = "brown"
     name = ""
