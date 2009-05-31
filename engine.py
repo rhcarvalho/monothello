@@ -49,10 +49,9 @@ class Engine:
                     if between == 0:
                         break
                     else:
-                        any_valid_position = True
                         if not play:
                             return True
-
+                        any_valid_position = True
                         x, y = position
                         for times in range(between+1):
                             to_change.append((x, y))
@@ -63,13 +62,13 @@ class Engine:
         if play and any_valid_position:
             for item in to_change:
                 self.board[item] = self.turn
-
+            self.calculate_score()
             self.change_turn()
             return True
         return False
 
     def find_valid_positions(self):
-        """Return a list of valid positions."""
+        """Returns a list of valid positions."""
 
         valid_positions = list()
         for i in range(8):
@@ -93,4 +92,16 @@ class Engine:
         next_turn = self.find_valid_positions()
         self.change_turn()
         return len(this_turn) == len(next_turn) == 0
+
+    def someone_winning(self):
+        return self.black_score != self.white_score
+
+    def who_is_winning(self):
+        """Returns a string with the winning side."""
+        if self.someone_winning():
+            if self.black_score > self.white_score:
+                return "Black"
+            else:
+                return "White"           
+        return None
 

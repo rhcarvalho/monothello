@@ -58,7 +58,7 @@ class Application:
             for column in range(8):
                 button = Button(frame,
                                 state=DISABLED,
-                                command=lambda position=(row, column): self.play(position, True))
+                                command=lambda position=(row, column): self.play(position))
                 button["bg"] = "gray"
                 button.pack(side=LEFT, fill=BOTH, expand=1)
                 self.board.update( {(row, column): button} )
@@ -85,7 +85,7 @@ class Application:
     def toggle_playable_positions(self):
         self.playable_positions = not self.playable_positions            
         if self.game:
-            self.update_board()       
+            self.update_board()
 
     def pass_turn(self):
         if not self.game:
@@ -94,23 +94,19 @@ class Application:
         self.update_board()
         self.status["text"] = "%s's turn." % self.game.turn
 
-    def play(self, position, play):
+    def play(self, position):
         if not self.game:
             return
-        if not self.game.move(position, play):
+        if not self.game.move(position, True):
             self.status["text"] = "Wrong move. %s's turn" % self.game.turn
         else:
-            self.game.calculate_score()
             self.update_board()
             if self.game.check_end():
                 message = "End of game. "
-                if self.game.black_score > self.game.white_score:
-                    winner = "Black win!"
-                elif self.game.black_score == self.game.white_score:
-                    winner = "Tie."
+                if self.game.someone_winning():
+                    message += self.game.who_is_winning() + " win!" 
                 else:
-                    winner = "White win!"
-                message += winner
+                    message += "Tie."
                 tkMessageBox.showinfo(title="End of game", message=message)
                 self.game = False
             else:

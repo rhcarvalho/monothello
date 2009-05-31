@@ -91,5 +91,66 @@ class TestMove(unittest.TestCase):
         self.assertEqual(self.game.board[(4, 6)], "B")        
 
 
+class TestScoreCalculus(unittest.TestCase):
+    def setUp(self):
+        self.game = Engine()
+        #cleaning board
+        self.game.board[(3, 3)] = self.game.board[(4, 4)] = "E"
+        self.game.board[(3, 4)] = self.game.board[(4, 3)] = "E"
+
+    def test_black5_white2(self):
+        self.game.board[(0, 0)] = "B"
+        self.game.board[(0, 1)] = "B"
+        self.game.board[(0, 5)] = "B"
+        self.game.board[(0, 3)] = "B"
+        self.game.board[(0, 2)] = "B"
+        self.game.board[(4, 2)] = "W"
+        self.game.board[(2, 1)] = "W"
+        self.game.calculate_score()
+        self.assertEqual(self.game.black_score, 5)
+        self.assertEqual(self.game.white_score, 2)
+
+
+class TestWhoIsWinning(unittest.TestCase):
+    def setUp(self):
+        self.game = Engine()
+        #cleaning board
+        self.game.board[(3, 3)] = self.game.board[(4, 4)] = "E"
+        self.game.board[(3, 4)] = self.game.board[(4, 3)] = "E"
+
+    def test_black_wins(self):
+        self.game.board[(5, 5)] = "B"
+        self.game.board[(5, 4)] = "B"
+        self.game.board[(1, 3)] = "W"
+        self.game.calculate_score()
+        self.assertEqual(self.game.who_is_winning(), "Black")
+
+    def test_white_wins(self):
+        self.game.board[(5, 5)] = "W"
+        self.game.board[(5, 4)] = "W"
+        self.game.board[(1, 3)] = "W"
+        self.game.calculate_score()
+        self.assertEqual(self.game.who_is_winning(), "White")
+
+    def test_none_win(self):
+        self.game.board[(5, 5)] = "W"
+        self.game.board[(5, 4)] = "B"
+        self.game.calculate_score()
+        self.assertEqual(self.game.who_is_winning(), None)
+
+
+class TestEndGame(unittest.TestCase):
+    def setUp(self):
+        self.game = Engine()
+        #cleaning board
+        self.game.board[(3, 3)] = self.game.board[(4, 4)] = "E"
+        self.game.board[(3, 4)] = self.game.board[(4, 3)] = "E"
+
+    def test_no_valid_move(self):
+        self.game.board[(0, 1)] = "W"
+        self.game.board[(3, 5)] = "B"
+        self.assertEqual(self.game.check_end(), True)
+  
+
 if __name__ == "__main__":
     unittest.main()
