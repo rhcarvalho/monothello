@@ -1,3 +1,18 @@
+#TODO think about Classes, Responsibilities, and Collaborations...
+#What entities are there? What should they do?
+
+#TODO replace hardcoded 'magic-strings' for objects
+class Piece(object):
+    pass
+    
+class WhitePiece(Piece):
+    def __str__(self):
+        return "W"
+        
+class BlackPiece(Piece):
+    def __str__(self):
+        return "B"
+
 class Engine:
     def __init__(self, turn="B"):
         """Put the pieces on the board, set the turn, 
@@ -25,7 +40,8 @@ class Engine:
             self.turn = "W"
         else:
             self.turn = "B"
-
+            
+    #TODO a method should have one and only one behavior (no flag-driven behavior)
     def move(self, position, play):
         """If play is True, moves to that position. 
         If play is False, just checks if the position is valid.
