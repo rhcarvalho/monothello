@@ -1,7 +1,9 @@
 class Engine:
     def __init__(self, turn="B"):
-        """Put the pieces on the board, set the turn, scores and the directions 
-        to check valid positions."""
+        """Put the pieces on the board, set the turn, 
+        scores and the directions to check valid positions.
+
+        """
 
         self.board = dict()
         for row in range(8):
@@ -17,14 +19,17 @@ class Engine:
         self.turn = turn
 
     def change_turn(self):
+        """Passes the turn to the other player."""
+
         if self.turn == "B":
             self.turn = "W"
         else:
             self.turn = "B"
 
     def move(self, position, play):
-        """If play is True, move to that position. 
-        If play is False, just check if the position is valid.
+        """If play is True, moves to that position. 
+        If play is False, just checks if the position is valid.
+
         """
 
         to_change = list()
@@ -43,9 +48,10 @@ class Engine:
 
                 if self.board[(i, j)] == "E":
                     break
-                elif self.turn != self.board[(i, j)]:
-                    between += 1    
-                elif self.board[(i, j)] == self.turn:
+
+                if self.turn != self.board[(i, j)]:
+                    between += 1
+                else:
                     if between == 0:
                         break
                     else:
@@ -68,7 +74,7 @@ class Engine:
         return False
 
     def find_valid_positions(self):
-        """Returns a list of valid positions."""
+        """Return a list of valid positions."""
 
         valid_positions = list()
         for i in range(8):
@@ -78,6 +84,8 @@ class Engine:
         return valid_positions
 
     def calculate_score(self):
+        """Update the player's score."""
+
         self.black_score = self.white_score = 0
         for i in range(8):
             for j in range(8):
@@ -87,6 +95,8 @@ class Engine:
                     self.black_score += 1
 
     def check_end(self):
+        """Return a bool."""
+
         this_turn = self.find_valid_positions()
         self.change_turn()
         next_turn = self.find_valid_positions()
@@ -94,10 +104,13 @@ class Engine:
         return len(this_turn) == len(next_turn) == 0
 
     def someone_winning(self):
+        """Returns a bool."""
+
         return self.black_score != self.white_score
 
     def who_is_winning(self):
-        """Returns a string with the winning side."""
+        """Returns a string with the winning side. None if no one is winning."""
+
         if self.someone_winning():
             if self.black_score > self.white_score:
                 return "Black"

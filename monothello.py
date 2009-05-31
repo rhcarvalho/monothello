@@ -4,9 +4,12 @@ from engine import Engine
 
 
 class Application:
-    """Handles the GUI stuffs. It communicates with the Engine of the game."""
 
-    def __init__(self):       
+    """GUI of the game."""
+
+    def __init__(self):
+        """Initialize the window and the GUI elements."""
+
         self.window = Tk()
         self.window.title("MonOthello")
         self.window.wm_maxsize(width="400", height="400")
@@ -31,10 +34,10 @@ class Application:
         menu.add_cascade(label="Game", menu=game, underline=0)
 
         settings = Menu(menu, tearoff=0)
-        self.playable_positions = False
-        settings.add_checkbutton(label="Show playable positions", 
-                                 variable=self.playable_positions, 
-                                 command=self.toggle_playable_positions,
+        self.show_valid_positions = False
+        settings.add_checkbutton(label="Show valid positions", 
+                                 variable=self.show_valid_positions, 
+                                 command=self.toggle_show_valid_positions,
                                  underline=0)
         menu.add_cascade(label="Settings", menu=settings, underline=0)
 
@@ -65,25 +68,24 @@ class Application:
 
     def create_options(self):
         pass_turn = Button(self.window, text="Pass", command=self.pass_turn)
-        pass_turn.pack()
+        pass_turn.pack(side=RIGHT)
         self.status = Label(self.window)
-        self.status["text"] = "Welcome to MonOthello!"
+        self.update_status("Welcome to MonOthello!")
         self.status.pack(side=LEFT)
 
     def create_game(self):
-        if self.game:
-            if not tkMessageBox.askyesno(title="New", message="Are you sure you want to restart?"):
+        message="Are you sure you want to restart?"
+        if self.game and \
+           not tkMessageBox.askyesno(title="New", message=message):
                 return
-        try:
-            self.game = Engine()
-            self.update_board()
-            self.status["text"] = "Let's play!"
-        except:
-            print "Error."
-            quit()
 
-    def toggle_playable_positions(self):
-        self.playable_positions = not self.playable_positions            
+        self.game = Engine()
+        self.update_board()
+        message = "Let's play! Now it's the %s's turn." % self.game.turn
+        self.update_status(message)
+
+    def toggle_show_valid_positions(self):
+        self.show_valid_positions = not self.show_valid_positions           
         if self.game:
             self.update_board()
 
@@ -92,13 +94,25 @@ class Application:
             return
         self.game.change_turn()
         self.update_board()
-        self.status["text"] = "%s's turn." % self.game.turn
+        message = "%s's turn." % self.game.turn
+        self.update_status(message)
+
+    def show_credits(self):
+        message = "MonOthello\nv.: 1.0"
+        tkMessageBox.showinfo(title="About", message=message)
+
+    def bye(self):
+        if tkMessageBox.askyesno(title="Quit", message="Really quit?"):
+            quit()
 
     def play(self, position):
+        """Move a piece to the given position."""
+
         if not self.game:
             return
         if not self.game.move(position, True):
-            self.status["text"] = "Wrong move. %s's turn" % self.game.turn
+            message = "Wrong move. %s's turn." % self.game.turn
+            self.update_status(message)
         else:
             self.update_board()
             if self.game.check_end():
@@ -110,7 +124,8 @@ class Application:
                 tkMessageBox.showinfo(title="End of game", message=message)
                 self.game = False
             else:
-                self.status["text"] = "%s's turn" % self.game.turn      
+                message = "%s's turn." % self.game.turn      
+                self.update_status(message)
 
     def update_board(self):
         for row in range(8):
@@ -126,21 +141,19 @@ class Application:
                 else:
                     position["bg"] = "brown"
 
-        if self.playable_positions:
-            valid = self.game.find_valid_positions()
-            for position in valid:
-                button = self.board[position]
-                button["bg"] = "green"
+        if self.show_valid_positions:
+            valid_positions = self.game.find_valid_positions()
+            for position in valid_positions:
+                self.board[position]["bg"] = "green"
+        self.update_score()
 
-        self.score["text"] = "Black: %s | White: %s" % (self.game.black_score, self.game.white_score)
+    def update_score(self):
+        self.score["text"] = "Black: %s | White: %s" % \
+                             (self.game.black_score, 
+                              self.game.white_score)
 
-    def show_credits(self):
-        message = "MonOthello\nv.: 1.0"
-        tkMessageBox.showinfo(title="About", message=message)
-
-    def bye(self):
-        if tkMessageBox.askyesno(title="Quit", message="Really quit?"):
-            quit()
+    def update_status(self, message):
+        self.status["text"] = message
 
 
 if __name__ == "__main__":
