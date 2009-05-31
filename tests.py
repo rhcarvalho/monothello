@@ -30,7 +30,9 @@ class TestChangeTurn(unittest.TestCase):
 class BaseMonOthelloTest(unittest.TestCase):
     def setUp(self):
         self.game = Engine()
-        #cleaning board
+        cleanup_board()
+        
+    def cleanup_board(self):
         self.game.board[(3, 3)] = self.game.board[(4, 4)] = "E"
         self.game.board[(3, 4)] = self.game.board[(4, 3)] = "E"
 
