@@ -25,15 +25,17 @@ class TestChangeTurn(unittest.TestCase):
         new_turn = game.turn
         self.assertEqual(turn == "W", new_turn == "B")
         self.assertEqual(turn == "B", new_turn == "W")
-        
 
-class TestMove(unittest.TestCase):
+
+class BaseMonOthelloTest(unittest.TestCase):
     def setUp(self):
         self.game = Engine()
         #cleaning board
         self.game.board[(3, 3)] = self.game.board[(4, 4)] = "E"
         self.game.board[(3, 4)] = self.game.board[(4, 3)] = "E"
-    
+
+
+class TestMove(BaseMonOthelloTest):
     def test_move_west(self):
         self.game.turn = "B"
         self.game.board[(0, 0)] = "B"
@@ -99,13 +101,7 @@ class TestMove(unittest.TestCase):
         self.assertEqual(self.game.board[(4, 6)], "B")        
 
 
-class TestScoreCalculus(unittest.TestCase):
-    def setUp(self):
-        self.game = Engine()
-        #cleaning board
-        self.game.board[(3, 3)] = self.game.board[(4, 4)] = "E"
-        self.game.board[(3, 4)] = self.game.board[(4, 3)] = "E"
-
+class TestScoreCalculus(BaseMonOthelloTest):
     def test_black5_white2(self):
         self.game.board[(0, 0)] = "B"
         self.game.board[(0, 1)] = "B"
@@ -119,13 +115,7 @@ class TestScoreCalculus(unittest.TestCase):
         self.assertEqual(self.game.white_score, 2)
 
 
-class TestWhoIsWinning(unittest.TestCase):
-    def setUp(self):
-        self.game = Engine()
-        #cleaning board
-        self.game.board[(3, 3)] = self.game.board[(4, 4)] = "E"
-        self.game.board[(3, 4)] = self.game.board[(4, 3)] = "E"
-
+class TestWhoIsWinning(BaseMonOthelloTest):
     def test_black_wins(self):
         self.game.board[(5, 5)] = "B"
         self.game.board[(5, 4)] = "B"
@@ -147,13 +137,7 @@ class TestWhoIsWinning(unittest.TestCase):
         self.assertEqual(self.game.who_is_winning(), None)
 
 
-class TestEndGame(unittest.TestCase):
-    def setUp(self):
-        self.game = Engine()
-        #cleaning board
-        self.game.board[(3, 3)] = self.game.board[(4, 4)] = "E"
-        self.game.board[(3, 4)] = self.game.board[(4, 3)] = "E"
-
+class TestEndGame(BaseMonOthelloTest):
     def test_no_move(self):
         self.game.board[(0, 1)] = "W"
         self.game.board[(3, 5)] = "B"
