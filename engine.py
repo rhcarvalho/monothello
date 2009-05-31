@@ -16,7 +16,7 @@ class Player2Piece(Piece):
 
 
 class Engine:
-    def __init__(self, turn="B"):
+    def __init__(self, turn=Player2Piece()):
         """Put the pieces on the board, set the turn,
         scores and the directions to check valid positions.
 
@@ -38,10 +38,10 @@ class Engine:
     def change_turn(self):
         """Passes the turn to the other player."""
 
-        if self.turn == "B":
-            self.turn = "W"
+        if isinstance(self.turn, Player2Piece):
+            self.turn = Player1Piece()
         else:
-            self.turn = "B"
+            self.turn = Player2Piece()
 
     #TODO a method should have one and only one behavior (no flag-driven behavior)
     def move(self, position, play):

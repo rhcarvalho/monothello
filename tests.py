@@ -23,7 +23,7 @@ class TestChangeTurn(unittest.TestCase):
         turn = game.turn
         game.change_turn()
         new_turn = game.turn
-        self.assertTrue((turn, new_turn) in (("W", "B"), ("B", "W")))
+        self.assertTrue(all(map(isinstance, (turn, new_turn), (Player2Piece, Player1Piece))))
 
 
 class BaseMonOthelloTest(unittest.TestCase):
