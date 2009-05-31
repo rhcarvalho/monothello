@@ -101,10 +101,6 @@ class Engine:
         this_turn = self.find_valid_positions()
         self.change_turn()
         next_turn = self.find_valid_positions()
-        if len(this_turn) == len(next_turn) == 0:
-            self.change_turn()
-            return True
-        else:
-            self.change_turn()
-            return False
+        self.change_turn()
+        return len(this_turn) == len(next_turn) == 0
 
