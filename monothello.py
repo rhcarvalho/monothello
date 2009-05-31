@@ -3,6 +3,7 @@ from Tkinter import BOTH, LEFT, RIGHT, NORMAL, DISABLED
 import tkMessageBox
 from engine import Engine, EmptyPiece, Player1Piece, Player2Piece
 
+#TODO centralize 'messages' somewhere - there's duplication in code
 
 class Application:
 
@@ -82,7 +83,7 @@ class Application:
 
         self.game = Engine()
         self.update_board()
-        message = "Let's play! Now it's the %s's turn." % self.game.turn
+        message = "Let's play! Now it's the %s's turn." % (self.game.turn.name,)
         self.update_status(message)
 
     def toggle_show_valid_positions(self):
@@ -95,7 +96,7 @@ class Application:
             return
         self.game.change_turn()
         self.update_board()
-        message = "%s's turn." % self.game.turn
+        message = "%s's turn." % (self.game.turn.name,)
         self.update_status(message)
 
     def show_credits(self):
@@ -112,7 +113,7 @@ class Application:
         if not self.game:
             return
         if not self.game.move(position, True):
-            message = "Wrong move. %s's turn." % self.game.turn
+            message = "Wrong move. %s's turn." % (self.game.turn.name,)
             self.update_status(message)
         else:
             self.update_board()
@@ -125,7 +126,7 @@ class Application:
                 tkMessageBox.showinfo(title="End of game", message=message)
                 self.game = False
             else:
-                message = "%s's turn." % self.game.turn
+                message = "%s's turn." % (self.game.turn.name,)
                 self.update_status(message)
 
     def update_board(self):

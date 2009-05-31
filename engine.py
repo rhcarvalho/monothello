@@ -3,16 +3,20 @@
 
 
 class Piece(object):
-    pass
+    color = None
+    name = None
 
 class EmptyPiece(Piece):
     color = "brown"
+    name = ""
 
 class Player1Piece(Piece):
     color = "white"
+    name = "White"
 
 class Player2Piece(Piece):
     color = "black"
+    name = "Black"
 
 
 class Engine:
