@@ -17,6 +17,7 @@ class Application:
 
         self.create_elements()
         self.game = False
+        self.show_valid_positions = False
 
         self.window.mainloop()
 
@@ -34,7 +35,6 @@ class Application:
         menu.add_cascade(label="Game", menu=game, underline=0)
 
         settings = Menu(menu, tearoff=0)
-        self.show_valid_positions = False
         settings.add_checkbutton(label="Show valid positions",
                                  variable=self.show_valid_positions,
                                  command=self.toggle_show_valid_positions,
