@@ -1,6 +1,6 @@
 from Tkinter import *
 import tkMessageBox
-from engine import Engine
+from engine import Engine, EmptyPiece, Player1Piece, Player2Piece
 
 
 class Application:
@@ -35,8 +35,8 @@ class Application:
 
         settings = Menu(menu, tearoff=0)
         self.show_valid_positions = False
-        settings.add_checkbutton(label="Show valid positions", 
-                                 variable=self.show_valid_positions, 
+        settings.add_checkbutton(label="Show valid positions",
+                                 variable=self.show_valid_positions,
                                  command=self.toggle_show_valid_positions,
                                  underline=0)
         menu.add_cascade(label="Settings", menu=settings, underline=0)
@@ -45,7 +45,7 @@ class Application:
         help = Menu(menu, tearoff=0)
         help.add_command(label="About", command=self.show_credits, underline=0)
         menu.add_cascade(label="Help", menu=help, underline=0)
-        
+
         self.window.config(menu=menu)
 
     def create_board(self):
@@ -85,7 +85,7 @@ class Application:
         self.update_status(message)
 
     def toggle_show_valid_positions(self):
-        self.show_valid_positions = not self.show_valid_positions           
+        self.show_valid_positions = not self.show_valid_positions
         if self.game:
             self.update_board()
 
@@ -118,28 +118,25 @@ class Application:
             if self.game.check_end():
                 message = "End of game. "
                 if self.game.someone_winning():
-                    message += self.game.who_is_winning() + " win!" 
+                    message += self.game.who_is_winning() + " win!"
                 else:
                     message += "Tie."
                 tkMessageBox.showinfo(title="End of game", message=message)
                 self.game = False
             else:
-                message = "%s's turn." % self.game.turn      
+                message = "%s's turn." % self.game.turn
                 self.update_status(message)
 
     def update_board(self):
         for row in range(8):
             for column in range(8):
                 position = self.board[(row, column)]
-                position["state"] = NORMAL
-                if self.game.board[(row, column)] == "W":
-                    position["bg"] = "white"
-                    position["state"] = DISABLED
-                elif self.game.board[(row, column)] == "B":
-                    position["bg"] = "black"
-                    position["state"] = DISABLED
-                else:
-                    position["bg"] = "brown"
+                current_cell = self.game.board[(row, column)]
+
+                position["bg"] = current_cell.color
+                position["state"] = DISABLED
+                if isinstance(current_cell, EmptyPiece):
+                    position["state"] = NORMAL
 
         if self.show_valid_positions:
             valid_positions = self.game.find_valid_positions()
@@ -149,7 +146,7 @@ class Application:
 
     def update_score(self):
         self.score["text"] = "Black: %s | White: %s" % \
-                             (self.game.black_score, 
+                             (self.game.black_score,
                               self.game.white_score)
 
     def update_status(self, message):

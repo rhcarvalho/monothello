@@ -1,21 +1,23 @@
 #TODO think about Classes, Responsibilities, and Collaborations...
 #What entities are there? What should they do?
 
-#TODO replace hardcoded 'magic-strings' for objects
+
 class Piece(object):
     pass
-    
-class WhitePiece(Piece):
-    def __str__(self):
-        return "W"
-        
-class BlackPiece(Piece):
-    def __str__(self):
-        return "B"
+
+class EmptyPiece(Piece):
+    color = "brown"
+
+class Player1Piece(Piece):
+    color = "white"
+
+class Player2Piece(Piece):
+    color = "black"
+
 
 class Engine:
     def __init__(self, turn="B"):
-        """Put the pieces on the board, set the turn, 
+        """Put the pieces on the board, set the turn,
         scores and the directions to check valid positions.
 
         """
@@ -23,13 +25,13 @@ class Engine:
         self.board = dict()
         for row in range(8):
             for column in range(8):
-                self.board[(row, column)] = "E"
-        self.board[(3, 3)] = self.board[(4, 4)] = "B"
-        self.board[(3, 4)] = self.board[(4, 3)] = "W"
+                self.board[(row, column)] = EmptyPiece()
+        self.board[(3, 3)] = self.board[(4, 4)] = Player2Piece()
+        self.board[(3, 4)] = self.board[(4, 3)] = Player1Piece()
 
-        self.directions = [(1, 0), (0, 1), (-1, 0), (0, -1), 
+        self.directions = [(1, 0), (0, 1), (-1, 0), (0, -1),
                            (1, 1), (-1, -1), (1, -1), (-1, 1)]
-  
+
         self.black_score = self.white_score = 2
         self.turn = turn
 
@@ -40,10 +42,10 @@ class Engine:
             self.turn = "W"
         else:
             self.turn = "B"
-            
+
     #TODO a method should have one and only one behavior (no flag-driven behavior)
     def move(self, position, play):
-        """If play is True, moves to that position. 
+        """If play is True, moves to that position.
         If play is False, just checks if the position is valid.
 
         """
@@ -53,16 +55,16 @@ class Engine:
         for direction in self.directions:
             i, j = position
             between = 0
-                
+
             while True:
                 if (direction[0] == 1 and i == 7) or (direction[0] == -1 and i == 0) or \
                    (direction[1] == 1 and j == 7) or (direction[1] == -1 and j == 0):
                     break
-                
+
                 i += direction[0]
                 j += direction[1]
 
-                if self.board[(i, j)] == "E":
+                if isinstance(self.board[(i, j)], EmptyPiece):
                     break
 
                 if self.turn != self.board[(i, j)]:
@@ -95,7 +97,7 @@ class Engine:
         valid_positions = list()
         for i in range(8):
             for j in range(8):
-                if self.board[(i, j)] == "E" and self.move((i, j), False):
+                if isinstance(self.board[(i, j)], EmptyPiece) and self.move((i, j), False):
                     valid_positions.append((i, j))
         return valid_positions
 
@@ -105,11 +107,12 @@ class Engine:
         self.black_score = self.white_score = 0
         for i in range(8):
             for j in range(8):
-                if self.board[(i, j)] == "W":
+                if isinstance(self.board[(i, j)], Player1Piece):
                     self.white_score += 1
-                if self.board[(i, j)] == "B":
+                if isinstance(self.board[(i, j)], Player2Piece):
                     self.black_score += 1
 
+    #TODO I think we can work on the betterment of this approach :P
     def check_end(self):
         """Return a bool."""
 
@@ -131,6 +134,6 @@ class Engine:
             if self.black_score > self.white_score:
                 return "Black"
             else:
-                return "White"           
+                return "White"
         return None
 
